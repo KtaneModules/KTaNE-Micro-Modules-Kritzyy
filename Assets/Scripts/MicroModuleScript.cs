@@ -27,6 +27,7 @@ public class MicroModuleScript : MonoBehaviour
         
      //Serial Number
     public string SerialNr = "XXXXX0";
+    string ShownSerialNr;
     List<string> PossibleSerialCharacters = new List<string>
     {
         "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"
@@ -225,7 +226,18 @@ public class MicroModuleScript : MonoBehaviour
             }
         }
         SerialNr = SerialNr.Remove(0, 6);
-        SerialNumberTxtMsh.text = SerialNr;
+        foreach (char Character in SerialNr)
+        {
+            if (char.IsDigit(Character))
+            {
+                ShownSerialNr += "<color=#FF0000>" + Character + "</color>";
+            }
+            else
+            {
+                ShownSerialNr += Character;
+            }
+        }
+        SerialNumberTxtMsh.text = ShownSerialNr;
         Debug.LogFormat("[Micro-Modules #{0}] The serial number is {1}", ModuleID, SerialNr);
 
         IndicatorGen1 = Random.Range(0, 9);
@@ -432,7 +444,7 @@ public class MicroModuleScript : MonoBehaviour
             DesiredSolveOrder.Add("Morse Code");
             SolveOffset = 1;
         }
-        else if (KeypadsMicroModuleIDTxt.text == "2" && BombInfo.GetModuleNames().Where((x) => x.Contains("Button")).Any())
+        else if (KeypadsMicroModuleIDTxt.text == "2" && BombInfo.GetModuleNames().Where((x) => x.Contains("Button")).Count() == 2)
         {
             DesiredSolveOrder.Add("Keypads");
             SolveOffset = 2;
@@ -450,15 +462,33 @@ public class MicroModuleScript : MonoBehaviour
                 {
                     DesiredSolveOrder.Add("Wires");
                     SolveOffset = 4;
+                }                else if (BombInfo.IsIndicatorOn(Indicator.BOB) || Indicator1 == "BOMB" || Indicator2 == "BOMB" || Indicator3 == "BOMB")
+                {
+                    DesiredSolveOrder.Clear();
+                    DesiredSolveOrder.Add("Unicorn");
+                    Unicorn = true;
+                    return;
                 }
-
-            }
-            else if (BombInfo.IsIndicatorOn(Indicator.BOB) || Indicator1 == "BOMB" || Indicator2 == "BOMB" || Indicator3 == "BOMB")
-            {
-                DesiredSolveOrder.Clear();
-                DesiredSolveOrder.Add("Unicorn");
-                Unicorn = true;
-                return;
+                else
+                {
+                    if (MorseMicroModuleIDTxt.text == "1")
+                    {
+                        DesiredSolveOrder.Add("Morse Code");
+                    }
+                    else if (KeypadsMicroModuleIDTxt.text == "1")
+                    {
+                        DesiredSolveOrder.Add("Keypads");
+                    }
+                    else if (PasswordMicroModuleIDTxt.text == "1")
+                    {
+                        DesiredSolveOrder.Add("Passwords");
+                    }
+                    else if (WireMicroModuleIDTxt.text == "1")
+                    {
+                        DesiredSolveOrder.Add("Wires");
+                    }
+                    SolveOffset = 1;
+                }
             }
             else
             {
@@ -517,9 +547,29 @@ public class MicroModuleScript : MonoBehaviour
             }
 
         }
-        else if (BombInfo.IsIndicatorOn(Indicator.BOB) || Indicator1 == "BOMB" || Indicator2 == "BOMB" || Indicator3 == "BOMB")
+        else if (BombInfo.IsIndicatorOn(Indicator.BOB))
         {
-            Debug.LogFormat("[Micro-Modules #{0}] Unicorn present, so the solve order doesn't matter.", ModuleID);
+            DesiredSolveOrder.Clear();
+            DesiredSolveOrder.Add("Unicorn");
+            Unicorn = true;
+            return;
+        }
+        else if (Indicator1 == "BOMB" && Indc1Lit)
+        {
+            DesiredSolveOrder.Clear();
+            DesiredSolveOrder.Add("Unicorn");
+            Unicorn = true;
+            return;
+        }
+        else if (Indicator2 == "BOMB" && Indc2Lit)
+        {
+            DesiredSolveOrder.Clear();
+            DesiredSolveOrder.Add("Unicorn");
+            Unicorn = true;
+            return;
+        }
+        else if (Indicator3 == "BOMB" && Indc3Lit)
+        {
             DesiredSolveOrder.Clear();
             DesiredSolveOrder.Add("Unicorn");
             Unicorn = true;
@@ -3628,8 +3678,8 @@ public class MicroModuleScript : MonoBehaviour
             ColorList.Add("Green");
             ColorList.Add("Red");
             ColorList.Add("Black");
-            ColorList.Add("Yellow");
             ColorList.Add("Blue");
+            ColorList.Add("Yellow");
         }
 
         int WireCol1Gen = Random.Range(0, 6), WireCol2Gen = Random.Range(0, 6), WireCol3Gen = Random.Range(0, 6), WireCol4Gen = Random.Range(0, 6), WireCol5Gen = Random.Range(0, 6), WireCol6Gen = Random.Range(0, 6);
