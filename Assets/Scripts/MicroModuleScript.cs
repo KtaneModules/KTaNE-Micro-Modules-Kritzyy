@@ -77,6 +77,7 @@ public class MicroModuleScript : MonoBehaviour
     {
 
     };
+    string[] ArrowNames = new string[] { "ArrowTL", "ArrowTR", "ArrowBL", "ArrowBR", "top left", "top right", "bottom left", "bottom right" };
     int KeyArrowGenerator;
     string DiagonalSide;
     public int BaseNr;
@@ -306,9 +307,9 @@ public class MicroModuleScript : MonoBehaviour
                     }
             }
         }
-        Debug.LogFormat("[Micro-Modules #{0}] Indicator 1 is {1}", ModuleID, Indc1Lit);
-        Debug.LogFormat("[Micro-Modules #{0}] Indicator 2 is {1}", ModuleID, Indc2Lit);
-        Debug.LogFormat("[Micro-Modules #{0}] Indicator 3 is {1}", ModuleID, Indc3Lit);
+        Debug.LogFormat("[Micro-Modules #{0}] Indicator 1 is {1} {2}", ModuleID, Indc1Lit ? "a lit" : "an unlit", Indicator1);
+        Debug.LogFormat("[Micro-Modules #{0}] Indicator 2 is {1} {2}", ModuleID, Indc2Lit ? "a lit" : "an unlit", Indicator2);
+        Debug.LogFormat("[Micro-Modules #{0}] Indicator 3 is {1} {2}", ModuleID, Indc3Lit ? "a lit" : "an unlit", Indicator3);
         BatteryColorGen = Random.Range(0, 8);
         switch (BatteryColorGen)
         {
@@ -449,109 +450,22 @@ public class MicroModuleScript : MonoBehaviour
             DesiredSolveOrder.Add("Keypads");
             SolveOffset = 2;
         }
-        else if (PasswordMicroModuleIDTxt.text == "3")
+        else if (PasswordMicroModuleIDTxt.text == "3" && (Indicator1 == "MINI" || Indicator2 == "MINI" || Indicator3 == "MINI" || Indicator1 == "BOMB" || Indicator2 == "BOMB" || Indicator3 == "BOMB"))
         {
-            if (Indicator1 == "MINI" || Indicator2 == "MINI" || Indicator3 == "MINI" || Indicator1 == "BOMB" || Indicator2 == "BOMB" || Indicator3 == "BOMB")
-            {
-                DesiredSolveOrder.Add("Passwords");
-                SolveOffset = 3;
-            }
-            else if (WireMicroModuleIDTxt.text == "4")
-            {
-                if (BatteryColor == "Red" || BatteryColor == "Green" || BatteryColor == "Blue")
-                {
-                    DesiredSolveOrder.Add("Wires");
-                    SolveOffset = 4;
-                }                else if (BombInfo.IsIndicatorOn(Indicator.BOB) || Indicator1 == "BOMB" || Indicator2 == "BOMB" || Indicator3 == "BOMB")
-                {
-                    DesiredSolveOrder.Clear();
-                    DesiredSolveOrder.Add("Unicorn");
-                    Unicorn = true;
-                    return;
-                }
-                else
-                {
-                    if (MorseMicroModuleIDTxt.text == "1")
-                    {
-                        DesiredSolveOrder.Add("Morse Code");
-                    }
-                    else if (KeypadsMicroModuleIDTxt.text == "1")
-                    {
-                        DesiredSolveOrder.Add("Keypads");
-                    }
-                    else if (PasswordMicroModuleIDTxt.text == "1")
-                    {
-                        DesiredSolveOrder.Add("Passwords");
-                    }
-                    else if (WireMicroModuleIDTxt.text == "1")
-                    {
-                        DesiredSolveOrder.Add("Wires");
-                    }
-                    SolveOffset = 1;
-                }
-            }
-            else
-            {
-                if (MorseMicroModuleIDTxt.text == "1")
-                {
-                    DesiredSolveOrder.Add("Morse Code");
-                }
-                else if (KeypadsMicroModuleIDTxt.text == "1")
-                {
-                    DesiredSolveOrder.Add("Keypads");
-                }
-                else if (PasswordMicroModuleIDTxt.text == "1")
-                {
-                    DesiredSolveOrder.Add("Passwords");
-                }
-                else if (WireMicroModuleIDTxt.text == "1")
-                {
-                    DesiredSolveOrder.Add("Wires");
-                }
-                SolveOffset = 1;
-            }
+            DesiredSolveOrder.Add("Passwords");
+            SolveOffset = 3;
         }
-        else if (WireMicroModuleIDTxt.text == "4")
+        else if (WireMicroModuleIDTxt.text == "4" && (BatteryColor == "Red" || BatteryColor == "Green" || BatteryColor == "Blue"))
         {
-            if (BatteryColor == "Red" || BatteryColor == "Green" || BatteryColor == "Blue")
-            {
-                DesiredSolveOrder.Add("Wires");
-                SolveOffset = 4;
-            }
-            else if (BombInfo.IsIndicatorOn(Indicator.BOB) || Indicator1 == "BOMB" || Indicator2 == "BOMB" || Indicator3 == "BOMB")
-            {
-                DesiredSolveOrder.Clear();
-                DesiredSolveOrder.Add("Unicorn");
-                Unicorn = true;
-                return;
-            }
-            else
-            {
-                if (MorseMicroModuleIDTxt.text == "1")
-                {
-                    DesiredSolveOrder.Add("Morse Code");
-                }
-                else if (KeypadsMicroModuleIDTxt.text == "1")
-                {
-                    DesiredSolveOrder.Add("Keypads");
-                }
-                else if (PasswordMicroModuleIDTxt.text == "1")
-                {
-                    DesiredSolveOrder.Add("Passwords");
-                }
-                else if (WireMicroModuleIDTxt.text == "1")
-                {
-                    DesiredSolveOrder.Add("Wires");
-                }
-                SolveOffset = 1;
-            }
-
+            DesiredSolveOrder.Add("Wires");
+            SolveOffset = 4;
         }
         else if (BombInfo.IsIndicatorOn(Indicator.BOB))
         {
             DesiredSolveOrder.Clear();
             DesiredSolveOrder.Add("Unicorn");
             Unicorn = true;
+            Debug.LogFormat("[Micro-Modules #{0}] The solve order doesn't matter", ModuleID);
             return;
         }
         else if (Indicator1 == "BOMB" && Indc1Lit)
@@ -559,6 +473,7 @@ public class MicroModuleScript : MonoBehaviour
             DesiredSolveOrder.Clear();
             DesiredSolveOrder.Add("Unicorn");
             Unicorn = true;
+            Debug.LogFormat("[Micro-Modules #{0}] The solve order doesn't matter", ModuleID);
             return;
         }
         else if (Indicator2 == "BOMB" && Indc2Lit)
@@ -566,6 +481,7 @@ public class MicroModuleScript : MonoBehaviour
             DesiredSolveOrder.Clear();
             DesiredSolveOrder.Add("Unicorn");
             Unicorn = true;
+            Debug.LogFormat("[Micro-Modules #{0}] The solve order doesn't matter", ModuleID);
             return;
         }
         else if (Indicator3 == "BOMB" && Indc3Lit)
@@ -573,6 +489,7 @@ public class MicroModuleScript : MonoBehaviour
             DesiredSolveOrder.Clear();
             DesiredSolveOrder.Add("Unicorn");
             Unicorn = true;
+            Debug.LogFormat("[Micro-Modules #{0}] The solve order doesn't matter", ModuleID);
             return;
         }
         else
@@ -812,41 +729,30 @@ public class MicroModuleScript : MonoBehaviour
                 DesiredSolveOrder.Add("Wires");
             }
         }
-        if (!Unicorn)
-        {
-            Debug.LogFormat("[Micro-Modules #{0}] The solve order is {1}, {2}, {3} and {4}", ModuleID, DesiredSolveOrder[0], DesiredSolveOrder[1], DesiredSolveOrder[2], DesiredSolveOrder[3]);
-        }
+        Debug.LogFormat("[Micro-Modules #{0}] The solve order is {1}, {2}, {3} and {4}", ModuleID, DesiredSolveOrder[0], DesiredSolveOrder[1], DesiredSolveOrder[2], DesiredSolveOrder[3]);
     }
 
     //Solve button
     protected bool BombSolveButton()
     {
-        GetComponent<KMSelectable>().AddInteractionPunch();
+        ModuleSubmit.AddInteractionPunch();
         if (ModulesLeft == 0)
         {
-            if (Enumerable.SequenceEqual(DesiredCuts, CurrentCuts))
+            Debug.LogFormat("[Micro-Modules #{0}] Modules solved in order of {1}, {2}, {3} and {4}", ModuleID, CurrentSolveOrder[0], CurrentSolveOrder[1], CurrentSolveOrder[2], CurrentSolveOrder[3]);
+            if (Enumerable.SequenceEqual(DesiredSolveOrder, CurrentSolveOrder) || DesiredSolveOrder[0] == "Unicorn")
             {
+                Debug.LogFormat("[Micro-Modules #{0}] ... Which was correct. Module passed.", ModuleID);
                 AlarmLight1.gameObject.SetActive(false);
                 AlarmLight2.gameObject.SetActive(false);
                 AlarmPointLight.color = Color.green;
                 AlarmGameObj.SetActive(false);
-                SolveAlarmLight.SetActive(true);
-                AlarmSolved.SetActive(true);
-                GetComponent<KMBombModule>().HandlePass();
-            }
-            else if (DesiredSolveOrder[1] == "Unicorn")
-            {
-                AlarmLight1.gameObject.SetActive(false);
-                AlarmLight2.gameObject.SetActive(false);
-                AlarmPointLight.color = Color.green;
-                AlarmGameObj.SetActive(false);
-                AlarmLightCTRL.SetActive(true);
                 SolveAlarmLight.SetActive(true);
                 AlarmSolved.SetActive(true);
                 GetComponent<KMBombModule>().HandlePass();
             }
             else
             {
+                Debug.LogFormat("[Micro-Modules #{0}] ... Which caused a strike!", ModuleID);
                 GetComponent<KMBombModule>().HandleStrike();
                 StrikeCount++;
                 CurrentStrikesText.text = StrikeCount.ToString();
@@ -864,7 +770,7 @@ public class MicroModuleScript : MonoBehaviour
     protected bool Reset()
     {
         Debug.LogFormat("[Micro-Modules #{0}] The module was reset.", ModuleID);
-        GetComponent<KMSelectable>().AddInteractionPunch();
+        ResetBtn.AddInteractionPunch();
 
         //Keypads Reset
         KeypadLedTL.material.mainTexture = KeypadLedOff;
@@ -945,9 +851,9 @@ public class MicroModuleScript : MonoBehaviour
         PasswordChar1.text = PasswordCharacter1.ToString();
         PasswordChar2.text = PasswordCharacter2.ToString();
         PasswordChar3.text = PasswordCharacter3.ToString();
-        CurrentSolveOrder.Clear();
 
         //General
+        CurrentSolveOrder.Clear();
         CurrentSolve = 0;
         ModulesLeft = 4;
         ModulesLeftText.text = ModulesLeft.ToString();
@@ -977,7 +883,7 @@ public class MicroModuleScript : MonoBehaviour
 
     protected bool ResetDeactivated()
     {
-        GetComponent<KMSelectable>().AddInteractionPunch();
+        ResetBtn.AddInteractionPunch();
         return false;
     }
 
@@ -2102,14 +2008,14 @@ public class MicroModuleScript : MonoBehaviour
         {
             DesiredKey = ArrowOrder[4].name;
         }
-        Debug.LogFormat("[Micro-Modules #{0}] [Directional Keypads] The correct key is {1}", ModuleID, DesiredKey);
+        Debug.LogFormat("[Micro-Modules #{0}] [Directional Keypads] The correct key is {1}", ModuleID, ArrowNames[Array.IndexOf(ArrowNames, DesiredKey) + 4]);
     }
 
     protected bool KeypadTLButton()
     {
-        GetComponent<KMSelectable>().AddInteractionPunch();
-        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
-        Debug.LogFormat("[Micro-Modules #{0}] [Directional Keypads] Key pressed: Top left. Expected: {1}", ModuleID, DesiredKey);
+        KeypadTL.AddInteractionPunch();
+        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, KeypadTL.transform);
+        Debug.LogFormat("[Micro-Modules #{0}] [Directional Keypads] Key pressed: top left. Expected: {1}", ModuleID, ArrowNames[Array.IndexOf(ArrowNames, DesiredKey) + 4]);
         if (DesiredKey == "ArrowTL")
         {
             Debug.LogFormat("[Micro-Modules #{0}] [Directional Keypads] ... Which was correct. Module passed.", ModuleID);
@@ -2121,10 +2027,10 @@ public class MicroModuleScript : MonoBehaviour
             SolveOrderDisplay[CurrentSolve].text = "Keypads";
             CurrentSolve++;
 
-            KeypadTL.OnInteract = KeypadDeactvated;
-            KeypadTR.OnInteract = KeypadDeactvated;
-            KeypadBL.OnInteract = KeypadDeactvated;
-            KeypadBR.OnInteract = KeypadDeactvated;
+            KeypadTL.OnInteract = delegate () { KeypadDeactivated(KeypadTL); return false; };
+            KeypadTR.OnInteract = delegate () { KeypadDeactivated(KeypadTR); return false; };
+            KeypadBL.OnInteract = delegate () { KeypadDeactivated(KeypadBL); return false; };
+            KeypadBR.OnInteract = delegate () { KeypadDeactivated(KeypadBR); return false; };
         }
         else
         {
@@ -2140,9 +2046,9 @@ public class MicroModuleScript : MonoBehaviour
 
     protected bool KeypadTRButton()
     {
-        GetComponent<KMSelectable>().AddInteractionPunch();
-        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
-        Debug.LogFormat("[Micro-Modules #{0}] [Directional Keypads] Key pressed: Top right. Expected: {1}", ModuleID, DesiredKey);
+        KeypadTR.AddInteractionPunch();
+        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, KeypadTR.transform);
+        Debug.LogFormat("[Micro-Modules #{0}] [Directional Keypads] Key pressed: top right. Expected: {1}", ModuleID, ArrowNames[Array.IndexOf(ArrowNames, DesiredKey) + 4]);
         if (DesiredKey == "ArrowTR")
         {
             Debug.LogFormat("[Micro-Modules #{0}] [Directional Keypads] ... Which was correct. Module passed.", ModuleID);
@@ -2154,10 +2060,10 @@ public class MicroModuleScript : MonoBehaviour
             SolveOrderDisplay[CurrentSolve].text = "Keypads";
             CurrentSolve++;
 
-            KeypadTL.OnInteract = KeypadDeactvated;
-            KeypadTR.OnInteract = KeypadDeactvated;
-            KeypadBL.OnInteract = KeypadDeactvated;
-            KeypadBR.OnInteract = KeypadDeactvated;
+            KeypadTL.OnInteract = delegate () { KeypadDeactivated(KeypadTL); return false; };
+            KeypadTR.OnInteract = delegate () { KeypadDeactivated(KeypadTR); return false; };
+            KeypadBL.OnInteract = delegate () { KeypadDeactivated(KeypadBL); return false; };
+            KeypadBR.OnInteract = delegate () { KeypadDeactivated(KeypadBR); return false; };
         }
         else
         {
@@ -2173,9 +2079,9 @@ public class MicroModuleScript : MonoBehaviour
 
     protected bool KeypadBLButton()
     {
-        GetComponent<KMSelectable>().AddInteractionPunch();
-        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
-        Debug.LogFormat("[Micro-Modules #{0}] [Directional Keypads] Key pressed: Bottom left. Expected: {1}", ModuleID, DesiredKey);
+        KeypadBL.AddInteractionPunch();
+        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, KeypadBL.transform);
+        Debug.LogFormat("[Micro-Modules #{0}] [Directional Keypads] Key pressed: bottom left. Expected: {1}", ModuleID, ArrowNames[Array.IndexOf(ArrowNames, DesiredKey) + 4]);
         if (DesiredKey == "ArrowBL")
         {
             Debug.LogFormat("[Micro-Modules #{0}] [Directional Keypads] ... Which was correct. Module passed.", ModuleID);
@@ -2187,10 +2093,10 @@ public class MicroModuleScript : MonoBehaviour
             SolveOrderDisplay[CurrentSolve].text = "Keypads";
             CurrentSolve++;
 
-            KeypadTL.OnInteract = KeypadDeactvated;
-            KeypadTR.OnInteract = KeypadDeactvated;
-            KeypadBL.OnInteract = KeypadDeactvated;
-            KeypadBR.OnInteract = KeypadDeactvated;
+            KeypadTL.OnInteract = delegate () { KeypadDeactivated(KeypadTL); return false; };
+            KeypadTR.OnInteract = delegate () { KeypadDeactivated(KeypadTR); return false; };
+            KeypadBL.OnInteract = delegate () { KeypadDeactivated(KeypadBL); return false; };
+            KeypadBR.OnInteract = delegate () { KeypadDeactivated(KeypadBR); return false; };
         }
         else
         {
@@ -2206,9 +2112,9 @@ public class MicroModuleScript : MonoBehaviour
 
     protected bool KeypadBRButton()
     {
-        GetComponent<KMSelectable>().AddInteractionPunch();
-        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
-        Debug.LogFormat("[Micro-Modules #{0}] [Directional Keypads] Key pressed: Bottom right. Expected: {1}", ModuleID, DesiredKey);
+        KeypadBR.AddInteractionPunch();
+        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, KeypadBR.transform);
+        Debug.LogFormat("[Micro-Modules #{0}] [Directional Keypads] Key pressed: bottom right. Expected: {1}", ModuleID, ArrowNames[Array.IndexOf(ArrowNames, DesiredKey) + 4]);
         if (DesiredKey == "ArrowBR")
         {
             Debug.LogFormat("[Micro-Modules #{0}] [Directional Keypads] ... Which was correct. Module passed.", ModuleID);
@@ -2220,10 +2126,10 @@ public class MicroModuleScript : MonoBehaviour
             SolveOrderDisplay[CurrentSolve].text = "Keypads";
             CurrentSolve++;
 
-            KeypadTL.OnInteract = KeypadDeactvated;
-            KeypadTR.OnInteract = KeypadDeactvated;
-            KeypadBL.OnInteract = KeypadDeactvated;
-            KeypadBR.OnInteract = KeypadDeactvated;
+            KeypadTL.OnInteract = delegate () { KeypadDeactivated(KeypadTL); return false; };
+            KeypadTR.OnInteract = delegate () { KeypadDeactivated(KeypadTR); return false; };
+            KeypadBL.OnInteract = delegate () { KeypadDeactivated(KeypadBL); return false; };
+            KeypadBR.OnInteract = delegate () { KeypadDeactivated(KeypadBR); return false; };
         }
         else
         {
@@ -2237,10 +2143,10 @@ public class MicroModuleScript : MonoBehaviour
         return false;
     }
 
-    protected bool KeypadDeactvated()
+    protected bool KeypadDeactivated(KMSelectable btn)
     {
-        GetComponent<KMSelectable>().AddInteractionPunch();
-        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
+        btn.AddInteractionPunch();
+        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, btn.transform);
         return false;
     }
     //End of keypad
@@ -2511,8 +2417,8 @@ public class MicroModuleScript : MonoBehaviour
 
     protected bool MorseReceiveCode()
     {
-        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
-        GetComponent<KMSelectable>().AddInteractionPunch();
+        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, MorseKeyReceive.transform);
+        MorseKeyReceive.AddInteractionPunch();
         if (CodeGenerated)
         {
             if (!MorseReceivingCode && MorseCharacters != 4)
@@ -2570,8 +2476,8 @@ public class MicroModuleScript : MonoBehaviour
 
     protected bool MorseKey0Press()
     {
-        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
-        GetComponent<KMSelectable>().AddInteractionPunch(0.25f);
+        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, MorseKey0.transform);
+        MorseKey0.AddInteractionPunch(0.25f);
         if (CodeGenerated)
         {
             if (!MorseReceivingCode && MorseCharacters != 4)
@@ -2603,8 +2509,8 @@ public class MicroModuleScript : MonoBehaviour
 
     protected bool MorseKey1Press()
     {
-        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
-        GetComponent<KMSelectable>().AddInteractionPunch(0.25f);
+        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, MorseKey1.transform);
+        MorseKey1.AddInteractionPunch(0.25f);
         if (CodeGenerated)
         {
             if (!MorseReceivingCode && MorseCharacters != 4)
@@ -2638,8 +2544,8 @@ public class MicroModuleScript : MonoBehaviour
     }
     protected bool MorseKey2Press()
     {
-        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
-        GetComponent<KMSelectable>().AddInteractionPunch(0.25f);
+        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, MorseKey2.transform);
+        MorseKey2.AddInteractionPunch(0.25f);
         if (CodeGenerated)
         {
             if (!MorseReceivingCode && MorseCharacters != 4)
@@ -2674,8 +2580,8 @@ public class MicroModuleScript : MonoBehaviour
 
     protected bool MorseKey3Press()
     {
-        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
-        GetComponent<KMSelectable>().AddInteractionPunch(0.25f);
+        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, MorseKey3.transform);
+        MorseKey3.AddInteractionPunch(0.25f);
         if (CodeGenerated)
         {
             if (!MorseReceivingCode && MorseCharacters != 4)
@@ -2710,8 +2616,8 @@ public class MicroModuleScript : MonoBehaviour
 
     protected bool MorseKey4Press()
     {
-        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
-        GetComponent<KMSelectable>().AddInteractionPunch(0.25f);
+        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, MorseKey4.transform);
+        MorseKey4.AddInteractionPunch(0.25f);
         if (CodeGenerated)
         {
             if (!MorseReceivingCode && MorseCharacters != 4)
@@ -2746,8 +2652,8 @@ public class MicroModuleScript : MonoBehaviour
 
     protected bool MorseKey5Press()
     {
-        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
-        GetComponent<KMSelectable>().AddInteractionPunch(0.25f);
+        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, MorseKey5.transform);
+        MorseKey5.AddInteractionPunch(0.25f);
         if (CodeGenerated)
         {
             if (!MorseReceivingCode && MorseCharacters != 4)
@@ -2783,8 +2689,8 @@ public class MicroModuleScript : MonoBehaviour
 
     protected bool MorseKey6Press()
     {
-        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
-        GetComponent<KMSelectable>().AddInteractionPunch(0.25f);
+        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, MorseKey6.transform);
+        MorseKey6.AddInteractionPunch(0.25f);
         if (CodeGenerated)
         {
             if (!MorseReceivingCode && MorseCharacters != 4)
@@ -2819,8 +2725,8 @@ public class MicroModuleScript : MonoBehaviour
 
     protected bool MorseKey7Press()
     {
-        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
-        GetComponent<KMSelectable>().AddInteractionPunch(0.25f);
+        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, MorseKey7.transform);
+        MorseKey7.AddInteractionPunch(0.25f);
         if (CodeGenerated)
         {
             if (!MorseReceivingCode && MorseCharacters != 4)
@@ -2855,8 +2761,8 @@ public class MicroModuleScript : MonoBehaviour
 
     protected bool MorseKey8Press()
     {
-        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
-        GetComponent<KMSelectable>().AddInteractionPunch(0.25f);
+        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, MorseKey8.transform);
+        MorseKey8.AddInteractionPunch(0.25f);
         if (CodeGenerated)
         {
             if (!MorseReceivingCode && MorseCharacters != 4)
@@ -2891,8 +2797,8 @@ public class MicroModuleScript : MonoBehaviour
 
     protected bool MorseKey9Press()
     {
-        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
-        GetComponent<KMSelectable>().AddInteractionPunch(0.25f);
+        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, MorseKey9.transform);
+        MorseKey9.AddInteractionPunch(0.25f);
         if (CodeGenerated)
         {
             if (!MorseReceivingCode && MorseCharacters != 4)
@@ -2927,8 +2833,8 @@ public class MicroModuleScript : MonoBehaviour
 
     protected bool MorseSubmitKey()
     {
-        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
-        GetComponent<KMSelectable>().AddInteractionPunch(1.5f);
+        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, MorseKeySend.transform);
+        MorseKeySend.AddInteractionPunch(1.5f);
         if (CodeGenerated)
         {
             if (!MorseReceivingCode)
@@ -2946,16 +2852,16 @@ public class MicroModuleScript : MonoBehaviour
 
                     MorseKeySend.OnInteract = MorseSendButtonDeactivated;
                     MorseKeyReceive.OnInteract = MorseReceiveButtonDeactivated;
-                    MorseKey0.OnInteract = MorseKeyDeactivated;
-                    MorseKey1.OnInteract = MorseKeyDeactivated;
-                    MorseKey2.OnInteract = MorseKeyDeactivated;
-                    MorseKey3.OnInteract = MorseKeyDeactivated;
-                    MorseKey4.OnInteract = MorseKeyDeactivated;
-                    MorseKey5.OnInteract = MorseKeyDeactivated;
-                    MorseKey6.OnInteract = MorseKeyDeactivated;
-                    MorseKey7.OnInteract = MorseKeyDeactivated;
-                    MorseKey8.OnInteract = MorseKeyDeactivated;
-                    MorseKey9.OnInteract = MorseKeyDeactivated;
+                    MorseKey0.OnInteract = delegate () { MorseKeyDeactivated(MorseKey0); return false; };
+                    MorseKey1.OnInteract = delegate () { MorseKeyDeactivated(MorseKey1); return false; };
+                    MorseKey2.OnInteract = delegate () { MorseKeyDeactivated(MorseKey2); return false; };
+                    MorseKey3.OnInteract = delegate () { MorseKeyDeactivated(MorseKey3); return false; };
+                    MorseKey4.OnInteract = delegate () { MorseKeyDeactivated(MorseKey4); return false; };
+                    MorseKey5.OnInteract = delegate () { MorseKeyDeactivated(MorseKey5); return false; };
+                    MorseKey6.OnInteract = delegate () { MorseKeyDeactivated(MorseKey6); return false; };
+                    MorseKey7.OnInteract = delegate () { MorseKeyDeactivated(MorseKey7); return false; };
+                    MorseKey8.OnInteract = delegate () { MorseKeyDeactivated(MorseKey8); return false; };
+                    MorseKey9.OnInteract = delegate () { MorseKeyDeactivated(MorseKey9); return false; };
                 }
                 else
                 {
@@ -2980,24 +2886,24 @@ public class MicroModuleScript : MonoBehaviour
         return false;
     }
 
-    protected bool MorseKeyDeactivated()
+    protected bool MorseKeyDeactivated(KMSelectable btn)
     {
-        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
-        GetComponent<KMSelectable>().AddInteractionPunch(0.25f);
+        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, btn.transform);
+        btn.AddInteractionPunch(0.25f);
         return false;
     }
 
     protected bool MorseSendButtonDeactivated()
     {
-        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
-        GetComponent<KMSelectable>().AddInteractionPunch(1.5f);
+        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, MorseKeySend.transform);
+        MorseKeySend.AddInteractionPunch(1.5f);
         return false;
     }
 
     protected bool MorseReceiveButtonDeactivated()
     {
-        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
-        GetComponent<KMSelectable>().AddInteractionPunch();
+        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, MorseKeyReceive.transform);
+        MorseKeyReceive.AddInteractionPunch();
         return false;
     }
     //End of Morse
@@ -3283,8 +3189,8 @@ public class MicroModuleScript : MonoBehaviour
 
     protected bool PasswordChar1Next()
     {
-        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
-        GetComponent<KMSelectable>().AddInteractionPunch(0.25f);
+        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, Password1Next.transform);
+        Password1Next.AddInteractionPunch(0.25f);
         ActionNumber1++;
         if (ActionNumber1 > 10)
             ActionNumber1 = 0;
@@ -3365,8 +3271,8 @@ public class MicroModuleScript : MonoBehaviour
 
     protected bool PasswordChar2Next()
     {
-        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
-        GetComponent<KMSelectable>().AddInteractionPunch(0.25f);
+        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, Password2Next.transform);
+        Password2Next.AddInteractionPunch(0.25f);
         ActionNumber2++;
         if (ActionNumber2 > 10)
             ActionNumber2 = 0;
@@ -3447,8 +3353,8 @@ public class MicroModuleScript : MonoBehaviour
 
     protected bool PasswordChar3Next()
     {
-        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
-        GetComponent<KMSelectable>().AddInteractionPunch(0.25f);
+        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, Password3Next.transform);
+        Password3Next.AddInteractionPunch(0.25f);
         ActionNumber3++;
         if (ActionNumber3 > 10)
             ActionNumber3 = 0;
@@ -3529,8 +3435,8 @@ public class MicroModuleScript : MonoBehaviour
 
     protected bool PasswordSubmision()
     {
-        GetComponent<KMSelectable>().AddInteractionPunch();
-        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
+        PasswordSubmit.AddInteractionPunch();
+        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, PasswordSubmit.transform);
         Debug.LogFormat("[Micro-Modules #{0}] [Math Code] Submitted: {1}, {2} and {3}. Desired: {4}, {5} and {6}", ModuleID, EnteredPasswordDigit1, EnteredPasswordDigit2, EnteredPasswordDigit3, SolutionPasswordDigit1, SolutionPasswordDigit2, SolutionPasswordDigit3);
         if (EnteredPasswordDigit1 == SolutionPasswordDigit1)
         {
@@ -3546,10 +3452,10 @@ public class MicroModuleScript : MonoBehaviour
                     SolveOrderDisplay[CurrentSolve].text = "Passwords";
                     CurrentSolve++;
 
-                    Password1Next.OnInteract = KeypadDeactvated;
-                    Password2Next.OnInteract = KeypadDeactvated;
-                    Password3Next.OnInteract = KeypadDeactvated;
-                    PasswordSubmit.OnInteract = PasswordDeactivation;
+                    Password1Next.OnInteract = delegate () { PasswordDeactivation(Password1Next); return false; };
+                    Password2Next.OnInteract = delegate () { PasswordDeactivation(Password2Next); return false; };
+                    Password3Next.OnInteract = delegate () { PasswordDeactivation(Password3Next); return false; };
+                    PasswordSubmit.OnInteract = delegate () { PasswordDeactivation(PasswordSubmit); return false; };
                 }
                 else
                 {
@@ -3624,9 +3530,10 @@ public class MicroModuleScript : MonoBehaviour
         return false;
     }
 
-    protected bool PasswordDeactivation()
+    protected bool PasswordDeactivation(KMSelectable btn)
     {
-        GetComponent<KMSelectable>().AddInteractionPunch();
+        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, btn.transform);
+        btn.AddInteractionPunch();
         return false;
     }
         //End of Password.
@@ -4001,8 +3908,8 @@ public class MicroModuleScript : MonoBehaviour
 
     protected bool CuttingWire1()
     {
-        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.WireSnip, transform);
-        GetComponent<KMSelectable>().AddInteractionPunch();
+        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.WireSnip, Wire1Sel.transform);
+        Wire1Sel.AddInteractionPunch();
         Debug.LogFormat("[Micro-Modules #{0}] [Script Wires] Wire 1 was cut", ModuleID);
         if (!WireWasCut1)
         {
@@ -4029,8 +3936,8 @@ public class MicroModuleScript : MonoBehaviour
     }
     protected bool CuttingWire2()
     {
-        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.WireSnip, transform);
-        GetComponent<KMSelectable>().AddInteractionPunch();
+        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.WireSnip, Wire2Sel.transform);
+        Wire2Sel.AddInteractionPunch();
         Debug.LogFormat("[Micro-Modules #{0}] [Script Wires] Wire 2 was cut", ModuleID);
         if (!WireWasCut2)
         {
@@ -4057,8 +3964,8 @@ public class MicroModuleScript : MonoBehaviour
     }
     protected bool CuttingWire3()
     {
-        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.WireSnip, transform);
-        GetComponent<KMSelectable>().AddInteractionPunch();
+        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.WireSnip, Wire3Sel.transform);
+        Wire3Sel.AddInteractionPunch();
         Debug.LogFormat("[Micro-Modules #{0}] [Script Wires] Wire 3 was cut", ModuleID);
         if (!WireWasCut3)
         {
@@ -4085,8 +3992,8 @@ public class MicroModuleScript : MonoBehaviour
     }
     protected bool CuttingWire4()
     {
-        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.WireSnip, transform);
-        GetComponent<KMSelectable>().AddInteractionPunch();
+        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.WireSnip, Wire4Sel.transform);
+        Wire4Sel.AddInteractionPunch();
         Debug.LogFormat("[Micro-Modules #{0}] [Script Wires] Wire 4 was cut", ModuleID);
         if (!WireWasCut4)
         {
@@ -4113,8 +4020,8 @@ public class MicroModuleScript : MonoBehaviour
     }
     protected bool CuttingWire5()
     {
-        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.WireSnip, transform);
-        GetComponent<KMSelectable>().AddInteractionPunch();
+        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.WireSnip, Wire5Sel.transform);
+        Wire5Sel.AddInteractionPunch();
         Debug.LogFormat("[Micro-Modules #{0}] [Script Wires] Wire 5 was cut", ModuleID);
         if (!WireWasCut5)
         {
@@ -4141,8 +4048,8 @@ public class MicroModuleScript : MonoBehaviour
     }
     protected bool CuttingWire6()
     {
-        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.WireSnip, transform);
-        GetComponent<KMSelectable>().AddInteractionPunch();
+        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.WireSnip, Wire6Sel.transform);
+        Wire6Sel.AddInteractionPunch();
         Debug.LogFormat("[Micro-Modules #{0}] [Script Wires] Wire 6 was cut", ModuleID);
         if (!WireWasCut6)
         {
@@ -4193,100 +4100,95 @@ public class MicroModuleScript : MonoBehaviour
     {
         if(command.Equals("submit", StringComparison.InvariantCultureIgnoreCase)){      //submit module
             yield return null;
-            yield return ModuleSubmit;
+            ModuleSubmit.OnInteract();
+            yield break;
         }
         if(command.Equals("reset", StringComparison.InvariantCultureIgnoreCase)){  //reset module
-            yield return null;     
-            yield return ResetBtn;
+            yield return null;
+            ResetBtn.OnInteract();
+            yield break;
         }
-        if(command.Contains("cut")){       //wires
+        if(command.StartsWith("cut ")){       //wires
             string commfinal=command.Replace("cut ", "");
             string[] digitstring = commfinal.Split(' ');
             int tried;
-            int index =1;
-            if (int.TryParse(digitstring[0], out tried))
+            if (int.TryParse(digitstring.Join(""), out tried))
             {
-                tried = int.Parse(digitstring[0]);
-                if (tried / 10 >= 1)
+                for (int i = 0; i < digitstring.Length; i++)
                 {
-                    yield return null;
-                    yield return "sendtochaterror Please separate the digits by spaces!";
-                    yield break;
-                }
-            }
-            foreach (string digit in digitstring){
-                if(int.TryParse(digit, out tried)){
-                    if(index<=6){
-                        tried=int.Parse(digit);
-                        index+=1;
-                        if(tried==1){
-                            yield return null;
-                            yield return Wire1Sel;
-                            yield return Wire1Sel;
-                        }
-                        if(tried==2){
-                            yield return null;
-                            yield return Wire2Sel;
-                            yield return Wire2Sel;
-                        }
-                        if(tried==3){
-                            yield return null;
-                            yield return Wire3Sel;
-                            yield return Wire3Sel;
-                        }
-                        if(tried==4){
-                            yield return null;
-                            yield return Wire4Sel;
-                            yield return Wire4Sel;
-                        }
-                        if(tried==5){
-                            yield return null;
-                            yield return Wire5Sel;
-                            yield return Wire5Sel;
-                        }
-                        if(tried==6){
-                            yield return null;
-                            yield return Wire6Sel;
-                            yield return Wire6Sel;
-                        }
-                    }
-                    else{
+                    if (int.Parse(digitstring[i]) / 10 >= 1)
+                    {
                         yield return null;
-                        yield return "sendtochaterror Too many digits!";
+                        yield return "sendtochaterror Please separate the digits by spaces!";
                         yield break;
                     }
                 }
-                else{
-                    yield return null;
-                    yield return "sendtochaterror Digit not valid.";
-                    yield break;
+            }
+            else
+            {
+                yield return null;
+                yield return "sendtochaterror Digit not valid.";
+                yield break;
+            }
+            if (digitstring.Length > 6)
+            {
+                yield return null;
+                yield return "sendtochaterror Too many digits!";
+                yield break;
+            }
+            yield return null;
+            foreach (string digit in digitstring){
+                if(int.TryParse(digit, out tried)){
+                    tried = int.Parse(digit);
+                    if (tried == 1)
+                    {
+                        Wire1Sel.OnInteract();
+                    }
+                    if (tried == 2)
+                    {
+                        Wire2Sel.OnInteract();
+                    }
+                    if (tried == 3)
+                    {
+                        Wire3Sel.OnInteract();
+                    }
+                    if (tried == 4)
+                    {
+                        Wire4Sel.OnInteract();
+                    }
+                    if (tried == 5)
+                    {
+                        Wire5Sel.OnInteract();
+                    }
+                    if (tried == 6)
+                    {
+                        Wire6Sel.OnInteract();
+                    }
+                    yield return new WaitForSeconds(0.1f);
                 }
             }
+            yield break;
         }
-        if(command.Contains("press")){  //keypad
+        if(command.StartsWith("press ")){  //keypad
             string commfinal=command.Replace("press ", "");
             int tried;
             if(int.TryParse(commfinal, out tried)){
-                tried=int.Parse(commfinal);
+                tried =int.Parse(commfinal);
                 if(tried==1){
                     yield return null;
-                    yield return KeypadTL;
-                    yield return KeypadTL;
+                    KeypadTL.OnInteract();
                 }
                 if(tried==2){
                     yield return null;
-                    yield return KeypadTR;
-                    yield return KeypadTR;
+                    KeypadTR.OnInteract();
                 }
                 if(tried==3){
                     yield return null;
-                    yield return KeypadBL;
-                    yield return KeypadBL;
+                    KeypadBL.OnInteract();
                 }
                 if(tried==4){
                     yield return null;
-                    yield return KeypadBR;
-                    yield return KeypadBR;
+                    KeypadBR.OnInteract();
                 }
             }
             else{
@@ -4294,158 +4196,286 @@ public class MicroModuleScript : MonoBehaviour
                     yield return "sendtochaterror Digit not valid.";
                     yield break;
                 }
+            yield break;
         }
         //morse
         if(command.Equals("receive")){   
-            yield return null;  
-            yield return MorseKeyReceive;
-            yield return MorseKeyReceive;
+            yield return null;
+            MorseKeyReceive.OnInteract();
+            yield break;
         }
-        if(command.Contains("send")){
-        
-        string commfinal=command.Replace("send ", "");
+        if(command.StartsWith("send ")){
+            string commfinal=command.Replace("send ", "");
             string[] digitstring = commfinal.Split(' ');
             int tried;
-            int index =1;
-            if (int.TryParse(digitstring[0], out tried))
+            if (int.TryParse(digitstring.Join(""), out tried))
             {
-                tried = int.Parse(digitstring[0]);
-                if (tried / 10 >= 1)
+                for (int i = 0; i < digitstring.Length; i++)
                 {
-                    yield return null;
-                    yield return "sendtochaterror Please separate the digits by spaces!";
-                    yield break;
+                    if (int.Parse(digitstring[i]) / 10 >= 1)
+                    {
+                        yield return null;
+                        yield return "sendtochaterror Please separate the digits by spaces!";
+                        yield break;
+                    }
                 }
             }
-            foreach (string digit in digitstring){
-                if(int.TryParse(digit, out tried)){
-                    if(index<=4){
-                        tried=int.Parse(digit);
-                        index+=1;
-                        switch (tried){
-                            case 1:
-                                yield return null;
-                                yield return MorseKey1;
-                                yield return MorseKey1;
-                                break;
-                            case 2:
-                                yield return null;
-                                yield return MorseKey2;
-                                yield return MorseKey2;
-                                break;
-                            case 3:
-                                yield return null;
-                                yield return MorseKey3;
-                                yield return MorseKey3;
-                                break;
-                            case 4:
-                                yield return null;
-                                yield return MorseKey4;
-                                yield return MorseKey4;
-                                break;
-                            case 5:
-                                yield return null;
-                                yield return MorseKey5;
-                                yield return MorseKey5;
-                                break;
-                            case 6:
-                                yield return null;
-                                yield return MorseKey6;
-                                yield return MorseKey6;
-                                break;
-                            case 7:
-                                yield return null;
-                                yield return MorseKey7;
-                                yield return MorseKey7;
-                                break;
-                            case 8:
-                                yield return null;
-                                yield return MorseKey8;
-                                yield return MorseKey8;
-                                break;
-                            case 9:
-                                yield return null;
-                                yield return MorseKey9;
-                                yield return MorseKey9;
-                                break;
-                            case 0:
-                                yield return null;
-                                yield return MorseKey0;
-                                yield return MorseKey0;
-                                break;
-                        }
-
-                    }
-                    else{
-                        yield return null;
-                        yield return "sendtochaterror Too many digits!";
-                    }
-                }
-                else{
-                    yield return null;
-                    yield return "sendtochaterror Digit not valid.";
-                }
-                
+            else
+            {
+                yield return null;
+                yield return "sendtochaterror Digit not valid.";
+                yield break;
+            }
+            if (digitstring.Length > 4)
+            {
+                yield return null;
+                yield return "sendtochaterror Too many digits!";
+                yield break;
+            }
+            if (digitstring.Length < 4)
+            {
+                yield return null;
+                yield return "sendtochaterror Not enough digits!";
+                yield break;
             }
             yield return null;
-            yield return MorseKeySend;
-            yield return MorseKeySend;
+            foreach (string digit in digitstring){
+                if(int.TryParse(digit, out tried)){
+                    tried = int.Parse(digit);
+                    switch (tried)
+                    {
+                        case 1:
+                            MorseKey1.OnInteract();
+                            yield return new WaitForSeconds(0.05f);
+                            break;
+                        case 2:
+                            MorseKey2.OnInteract();
+                            yield return new WaitForSeconds(0.05f);
+                            break;
+                        case 3:
+                            MorseKey3.OnInteract();
+                            yield return new WaitForSeconds(0.1f);
+                            break;
+                        case 4:
+                            MorseKey4.OnInteract();
+                            yield return new WaitForSeconds(0.1f);
+                            break;
+                        case 5:
+                            MorseKey5.OnInteract();
+                            yield return new WaitForSeconds(0.1f);
+                            break;
+                        case 6:
+                            MorseKey6.OnInteract();
+                            yield return new WaitForSeconds(0.1f);
+                            break;
+                        case 7:
+                            MorseKey7.OnInteract();
+                            yield return new WaitForSeconds(0.1f);
+                            break;
+                        case 8:
+                            MorseKey8.OnInteract();
+                            yield return new WaitForSeconds(0.1f);
+                            break;
+                        case 9:
+                            MorseKey9.OnInteract();
+                            yield return new WaitForSeconds(0.1f);
+                            break;
+                        case 0:
+                            MorseKey0.OnInteract();
+                            yield return new WaitForSeconds(0.1f);
+                            break;
+                    }
+                }
+            }
+            MorseKeySend.OnInteract();
+            yield break;
         }
-        if(command.Contains("answer")){
+        if(command.StartsWith("answer ")){
             string commfinal=command.Replace("answer ", "");
             string[] digitstring = commfinal.Split(' ');
             int tried;
+            if (int.TryParse(digitstring.Join(""), out tried))
+            {
+                for (int i = 0; i < digitstring.Length; i++)
+                {
+                    if (int.Parse(digitstring[i]) / 10 >= 1)
+                    {
+                        yield return null;
+                        yield return "sendtochaterror Please separate the digits by spaces!";
+                        yield break;
+                    }
+                }
+            }
+            else
+            {
+                yield return null;
+                yield return "sendtochaterror Digit not valid.";
+                yield break;
+            }
+            if (digitstring.Length > 3)
+            {
+                yield return null;
+                yield return "sendtochaterror Too many digits!";
+                yield break;
+            }
+            if (digitstring.Length < 3)
+            {
+                yield return null;
+                yield return "sendtochaterror Not enough digits!";
+                yield break;
+            }
+            yield return null;
             int index =1;
             foreach(string digit in digitstring){
                 if(int.TryParse(digit, out tried)){
                     if(index<=3){
                         tried=int.Parse(digit);
                         tried+=1;
-                        
-                        if(tried<=10){
-                            if(tried>=1){
-                                for(int i=0;i<tried;i++){
-                                    if(index==1){
-                                        yield return null;
-                                        yield return Password1Next;
-                                        yield return Password1Next;
-                                    }
-                                    if(index==2){
-                                        yield return null;
-                                        yield return Password2Next;
-                                        yield return Password2Next;
-                                    }
-                                    if(index==3){
-                                        yield return null;
-                                        yield return Password3Next;
-                                        yield return Password3Next;
-                                    }
-                                }
+
+                        for (int i = 0; i < tried; i++)
+                        {
+                            if (index == 1)
+                            {
+                                Password1Next.OnInteract();
                             }
+                            if (index == 2)
+                            {
+                                Password2Next.OnInteract();
+                            }
+                            if (index == 3)
+                            {
+                                Password3Next.OnInteract();
+                            }
+                            yield return new WaitForSeconds(0.1f);
                         }
-                        
-                        index+=1;
+
+                        index +=1;
                     }
-                    else{
-                        yield return null;
-                        yield return "sendtochaterror Too many digits!";
-                    }
-                }
-                else{
-                    yield return null;
-                    yield return "sendtochaterror Digit not valid.";
                 }
             }
-            yield return null;
-            yield return PasswordSubmit;
-            yield return PasswordSubmit;        
+            PasswordSubmit.OnInteract();
+            yield break;
         }
-        if (command.Contains("scriptinfo"))
+        if (command.Equals("scriptinfo"))
         {
             yield return null;
             yield return "sendtochat The renderer's name: " + RendererName;
             yield break;
         }
+    }
+
+    IEnumerator TwitchHandleForcedSolve()
+    {
+        List<string> order = DesiredSolveOrder;
+        if (!Unicorn)
+        {
+            for (int i = 0; i < CurrentSolveOrder.Count; i++)
+            {
+                if (order[i] != CurrentSolveOrder[i])
+                {
+                    while (ResetBtn.OnInteract != Reset) yield return true;
+                    ResetBtn.OnInteract();
+                    yield return new WaitForSeconds(0.1f);
+                    break;
+                }
+            }
+        }
+        else
+        {
+            order = new List<string>() { "Keypads", "Morse Code", "Passwords", "Wires" };
+            order.Shuffle();
+        }
+        if (MorseEnteredCode != null)
+        {
+            for (int i = 0; i < MorseEnteredCode.Length; i++)
+            {
+                if (MorseIntCode.ToString()[i] != MorseEnteredCode[i])
+                {
+                    while (ResetBtn.OnInteract != Reset) yield return true;
+                    ResetBtn.OnInteract();
+                    yield return new WaitForSeconds(0.1f);
+                    break;
+                }
+            }
+        }
+        int start = CurrentSolveOrder.Count;
+        for (int i = start; i < 4; i++)
+        {
+            if (order[i] == "Keypads")
+            {
+                KMSelectable[] btns = new KMSelectable[] { KeypadTL, KeypadTR, KeypadBL, KeypadBR };
+                btns[Array.IndexOf(ArrowNames, DesiredKey)].OnInteract();
+                yield return new WaitForSeconds(0.1f);
+            }
+            else if (order[i] == "Morse Code")
+            {
+                KMSelectable[] btns = new KMSelectable[] { MorseKey0, MorseKey1, MorseKey2, MorseKey3, MorseKey4, MorseKey5, MorseKey6, MorseKey7, MorseKey8, MorseKey9 };
+                int start2 = 0;
+                if (MorseEnteredCode != null)
+                    start2 = MorseEnteredCode.Length;
+                for (int j = start2; j < MorseIntCode.ToString().Length; j++)
+                {
+                    btns[int.Parse(MorseIntCode.ToString()[j].ToString())].OnInteract();
+                    yield return new WaitForSeconds(0.1f);
+                }
+                MorseKeySend.OnInteract();
+                yield return new WaitForSeconds(0.1f);
+            }
+            else if (order[i] == "Passwords")
+            {
+                while (SolutionPasswordDigit1 != EnteredPasswordDigit1)
+                {
+                    Password1Next.OnInteract();
+                    yield return new WaitForSeconds(0.1f);
+                }
+                while (SolutionPasswordDigit2 != EnteredPasswordDigit2)
+                {
+                    Password2Next.OnInteract();
+                    yield return new WaitForSeconds(0.1f);
+                }
+                while (SolutionPasswordDigit3 != EnteredPasswordDigit3)
+                {
+                    Password3Next.OnInteract();
+                    yield return new WaitForSeconds(0.1f);
+                }
+                PasswordSubmit.OnInteract();
+                yield return new WaitForSeconds(0.1f);
+            }
+            else if (order[i] == "Wires")
+            {
+                if (WireShouldBeCut1 && !WireWasCut1)
+                {
+                    Wire1Sel.OnInteract();
+                    yield return new WaitForSeconds(0.1f);
+                }
+                if (WireShouldBeCut2 && !WireWasCut2)
+                {
+                    Wire2Sel.OnInteract();
+                    yield return new WaitForSeconds(0.1f);
+                }
+                if (WireShouldBeCut3 && !WireWasCut3)
+                {
+                    Wire3Sel.OnInteract();
+                    yield return new WaitForSeconds(0.1f);
+                }
+                if (WireShouldBeCut4 && !WireWasCut4)
+                {
+                    Wire4Sel.OnInteract();
+                    yield return new WaitForSeconds(0.1f);
+                }
+                if (WireShouldBeCut5 && !WireWasCut5)
+                {
+                    Wire5Sel.OnInteract();
+                    yield return new WaitForSeconds(0.1f);
+                }
+                if (WireShouldBeCut6 && !WireWasCut6)
+                {
+                    Wire6Sel.OnInteract();
+                    yield return new WaitForSeconds(0.1f);
+                }
+            }
+        }
+        ModuleSubmit.OnInteract();
     }
 
     public KMSelectable Button1, Button2, Chip;
@@ -4485,7 +4515,7 @@ public class MicroModuleScript : MonoBehaviour
     int Clicks;
     protected bool HandleClick()
     {
-        GetComponent<KMSelectable>().AddInteractionPunch(0.01f);
+        Chip.AddInteractionPunch(0.01f);
         Clicks++;
         if (CodeGenerated)
         {
