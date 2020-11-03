@@ -4346,7 +4346,7 @@ public class MicroModuleScript : MonoBehaviour
                             {
                                 Password3Next.OnInteract();
                             }
-                            yield return new WaitForSeconds(0.1f);
+                            yield return new WaitForSeconds(0.075f);
                         }
 
                         index +=1;
@@ -4426,17 +4426,17 @@ public class MicroModuleScript : MonoBehaviour
                 while (SolutionPasswordDigit1 != EnteredPasswordDigit1)
                 {
                     Password1Next.OnInteract();
-                    yield return new WaitForSeconds(0.1f);
+                    yield return new WaitForSeconds(0.075f);
                 }
                 while (SolutionPasswordDigit2 != EnteredPasswordDigit2)
                 {
                     Password2Next.OnInteract();
-                    yield return new WaitForSeconds(0.1f);
+                    yield return new WaitForSeconds(0.075f);
                 }
                 while (SolutionPasswordDigit3 != EnteredPasswordDigit3)
                 {
                     Password3Next.OnInteract();
-                    yield return new WaitForSeconds(0.1f);
+                    yield return new WaitForSeconds(0.075f);
                 }
                 PasswordSubmit.OnInteract();
                 yield return new WaitForSeconds(0.1f);
