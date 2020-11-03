@@ -24,6 +24,7 @@ public class MicroModuleScript : MonoBehaviour
     //General related
     //Module
     public KMBombModule ThisModule;
+    public Light[] AllLights;
         
      //Serial Number
     public string SerialNr = "XXXXX0";
@@ -213,6 +214,11 @@ public class MicroModuleScript : MonoBehaviour
 
     void Start()
     {
+        float scalar = transform.lossyScale.x;
+        foreach (Light l in AllLights)
+        {
+            l.range *= scalar;
+        }
         foreach (char Character in SerialNr)
         {
             if (Character == 'X')
