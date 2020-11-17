@@ -4114,6 +4114,7 @@ public class MicroModuleScript : MonoBehaviour
             ResetBtn.OnInteract();
             yield break;
         }
+        command = command.ToLower();
         if(command.StartsWith("cut ")){       //wires
             string commfinal=command.Replace("cut ", "");
             string[] digitstring = commfinal.Split(' ');
