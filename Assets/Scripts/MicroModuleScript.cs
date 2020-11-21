@@ -4114,6 +4114,7 @@ public class MicroModuleScript : MonoBehaviour
             ResetBtn.OnInteract();
             yield break;
         }
+        command = command.ToLower();
         if(command.StartsWith("cut ")){       //wires
             string commfinal=command.Replace("cut ", "");
             string[] digitstring = commfinal.Split(' ');
@@ -4214,7 +4215,7 @@ public class MicroModuleScript : MonoBehaviour
             string commfinal=command.Replace("send ", "");
             string[] digitstring = commfinal.Split(' ');
             int tried;
-            if (int.TryParse(digitstring.Join(""), out tried))
+            if (int.TryParse(digitstring.Join(""), out tried) && digitstring[0] != "-")
             {
                 for (int i = 0; i < digitstring.Length; i++)
                 {
@@ -4236,12 +4237,6 @@ public class MicroModuleScript : MonoBehaviour
             {
                 yield return null;
                 yield return "sendtochaterror Too many digits!";
-                yield break;
-            }
-            if (digitstring.Length < 4)
-            {
-                yield return null;
-                yield return "sendtochaterror Not enough digits!";
                 yield break;
             }
             yield return null;
