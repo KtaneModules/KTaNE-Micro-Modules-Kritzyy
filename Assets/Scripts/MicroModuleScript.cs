@@ -451,7 +451,7 @@ public class MicroModuleScript : MonoBehaviour
             DesiredSolveOrder.Add("Morse Code");
             SolveOffset = 1;
         }
-        else if (KeypadsMicroModuleIDTxt.text == "2" && BombInfo.GetModuleNames().Where((x) => x.Contains("Button")).Count() == 2)
+        else if (KeypadsMicroModuleIDTxt.text == "2" && BombInfo.GetModuleNames().Where((x) => x.Contains("Button")).Count() > 1)
         {
             DesiredSolveOrder.Add("Keypads");
             SolveOffset = 2;
