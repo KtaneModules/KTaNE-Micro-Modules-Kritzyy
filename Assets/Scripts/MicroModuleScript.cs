@@ -136,7 +136,7 @@ public class MicroModuleScript : MonoBehaviour
     public GameObject Wire1UpObj, Wire2UpObj, Wire3UpObj, Wire4UpObj, Wire5UpObj, Wire6UpObj, Wire1DownObj, Wire2DownObj, Wire3DownObj, Wire4DownObj, Wire5DownObj, Wire6DownObj; //Wires
     List<string> PossibleRendererNames = new List<string>
     {
-        "BOMB", "EXPL", "MINI", "NULL", "BOB", "MSA", "SIG", "TRN", "DVID", "Parallel", "SRCA", "RJ45", "WireCount", "AllWires", "WireRenderer", "CurrentWire"
+        "BOMB", "EXPL", "MINI", "NULL", "BOB", "MSA", "SIG", "TRN", "DVID", "Parallel", "StereoRCA", "RJ45", "WireCount", "AllWires", "WireRenderer", "CurrentWire"
     };
     public bool[] DesiredCuts;
     public bool[] CurrentCuts;
@@ -451,7 +451,7 @@ public class MicroModuleScript : MonoBehaviour
             DesiredSolveOrder.Add("Morse Code");
             SolveOffset = 1;
         }
-        else if (KeypadsMicroModuleIDTxt.text == "2" && BombInfo.GetModuleNames().Where((x) => x.Contains("Button")).Count() > 1)
+        else if (KeypadsMicroModuleIDTxt.text == "2" && BombInfo.GetModuleNames().Where((x) => x.ToLower().Contains("button")).Count() > 1) // First convert to lowercase, then check comparison
         {
             DesiredSolveOrder.Add("Keypads");
             SolveOffset = 2;
@@ -2423,6 +2423,7 @@ public class MicroModuleScript : MonoBehaviour
 
     protected bool MorseReceiveCode()
     {
+        Debug.LogFormat("(Micro-Modules #{0}) [Code Morse] Pressed the morse generate button", ModuleID);
         GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, MorseKeyReceive.transform);
         MorseKeyReceive.AddInteractionPunch();
         if (CodeGenerated)
@@ -2434,6 +2435,7 @@ public class MicroModuleScript : MonoBehaviour
             }
             else
             {
+                Debug.LogFormat("[Micro-Modules #{0}] [Code Morse] Tried pressing the generate Morse button while already active! Strike handed.", ModuleID);
                 GetComponent<KMBombModule>().HandleStrike();
                 StrikeCount++;
                 CurrentStrikesText.text = StrikeCount.ToString();
@@ -2541,6 +2543,7 @@ public class MicroModuleScript : MonoBehaviour
             }
             else
             {
+                Debug.LogFormat("[Micro-Modules #{0}] [Code Morse] Character input while still receiving code! Strike handed.", ModuleID);
                 GetComponent<KMBombModule>().HandleStrike();
                 StrikeCount++;
                 CurrentStrikesText.text = StrikeCount.ToString();
@@ -2576,6 +2579,7 @@ public class MicroModuleScript : MonoBehaviour
             }
             else
             {
+                Debug.LogFormat("[Micro-Modules #{0}] [Code Morse] Character input while still receiving code! Strike handed.", ModuleID);
                 GetComponent<KMBombModule>().HandleStrike();
                 StrikeCount++;
                 CurrentStrikesText.text = StrikeCount.ToString();
@@ -2612,6 +2616,7 @@ public class MicroModuleScript : MonoBehaviour
             }
             else
             {
+                Debug.LogFormat("[Micro-Modules #{0}] [Code Morse] Character input while still receiving code! Strike handed.", ModuleID);
                 GetComponent<KMBombModule>().HandleStrike();
                 StrikeCount++;
                 CurrentStrikesText.text = StrikeCount.ToString();
@@ -2648,6 +2653,7 @@ public class MicroModuleScript : MonoBehaviour
             }
             else
             {
+                Debug.LogFormat("[Micro-Modules #{0}] [Code Morse] Character input while still receiving code! Strike handed.", ModuleID);
                 GetComponent<KMBombModule>().HandleStrike();
                 StrikeCount++;
                 CurrentStrikesText.text = StrikeCount.ToString();
@@ -2684,6 +2690,7 @@ public class MicroModuleScript : MonoBehaviour
             }
             else
             {
+                Debug.LogFormat("[Micro-Modules #{0}] [Code Morse] Character input while still receiving code! Strike handed.", ModuleID);
                 GetComponent<KMBombModule>().HandleStrike();
                 StrikeCount++;
                 CurrentStrikesText.text = StrikeCount.ToString();
@@ -2721,6 +2728,7 @@ public class MicroModuleScript : MonoBehaviour
             }
             else
             {
+                Debug.LogFormat("[Micro-Modules #{0}] [Code Morse] Character input while still receiving code! Strike handed.", ModuleID);
                 GetComponent<KMBombModule>().HandleStrike();
                 StrikeCount++;
                 CurrentStrikesText.text = StrikeCount.ToString();
@@ -2757,6 +2765,7 @@ public class MicroModuleScript : MonoBehaviour
             }
             else
             {
+                Debug.LogFormat("[Micro-Modules #{0}] [Code Morse] Character input while still receiving code! Strike handed.", ModuleID);
                 GetComponent<KMBombModule>().HandleStrike();
                 StrikeCount++;
                 CurrentStrikesText.text = StrikeCount.ToString();
@@ -2793,6 +2802,7 @@ public class MicroModuleScript : MonoBehaviour
             }
             else
             {
+                Debug.LogFormat("[Micro-Modules #{0}] [Code Morse] Character input while still receiving code! Strike handed.", ModuleID);
                 GetComponent<KMBombModule>().HandleStrike();
                 StrikeCount++;
                 CurrentStrikesText.text = StrikeCount.ToString();
@@ -2829,6 +2839,7 @@ public class MicroModuleScript : MonoBehaviour
             }
             else
             {
+                Debug.LogFormat("[Micro-Modules #{0}] [Code Morse] Character input while still receiving code! Strike handed.", ModuleID);
                 GetComponent<KMBombModule>().HandleStrike();
                 StrikeCount++;
                 CurrentStrikesText.text = StrikeCount.ToString();
@@ -3574,7 +3585,7 @@ public class MicroModuleScript : MonoBehaviour
             ColorList.Add("Yellow");
             ColorList.Add("Red");
         }
-        else if (RendererName == "DVID" || RendererName == "Parallel" || RendererName == "SRCA" || RendererName == "RJ45")
+        else if (RendererName == "DVID" || RendererName == "Parallel" || RendererName == "StereoRCA" || RendererName == "RJ45")
         {
             Debug.LogFormat("[Micro-Modules #{0}] [Script Wires] Using List 3", ModuleID);
             ColorList.Add("Green");
@@ -4559,15 +4570,15 @@ public class MicroModuleScript : MonoBehaviour
             {
                 if (MorseIntCode.ToString().Length == 1)
                 {
-                    MorseCodeTxtMsh.text = "000" + MorseIntCode;
+                    MorseCodeTxtMsh.text = "___" + MorseIntCode;
                 }
                 else if (MorseIntCode.ToString().Length == 2)
                 {
-                    MorseCodeTxtMsh.text = "00" + MorseIntCode;
+                    MorseCodeTxtMsh.text = "__" + MorseIntCode;
                 }
                 else if (MorseIntCode.ToString().Length == 3)
                 {
-                    MorseCodeTxtMsh.text = "0" + MorseIntCode;
+                    MorseCodeTxtMsh.text = "_" + MorseIntCode;
                 }
                 else
                 {
